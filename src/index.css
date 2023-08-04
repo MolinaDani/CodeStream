@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Montserrat-Light';
+    src: url(./assets/fonts/Montserrat/static/Montserrat-Light.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat-Regular';
+    src: url(./assets/fonts/Montserrat/static/Montserrat-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat-Medium';
+    src: url(./assets/fonts/Montserrat/static/Montserrat-Medium.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat-Bold';
+    src: url(./assets/fonts/Montserrat/static/Montserrat-Bold.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Jetbrains-Mono';
+    src: url(./assets/fonts/JetBrainsMono-2.304/fonts/ttf/JetBrainsMono-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
