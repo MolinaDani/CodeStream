@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-    font-family: 'Montserrat-Light';
-    src: url(./assets/fonts/Montserrat/static/Montserrat-Light.ttf);
-    font-weight: normal;
-    font-style: normal;
-}
 
 @font-face {
     font-family: 'Montserrat-Regular';
@@ -28,36 +22,4 @@
     src: url(./assets/fonts/Montserrat/static/Montserrat-Bold.ttf);
     font-weight: normal;
     font-style: normal;
-}
-
-@font-face {
-    font-family: 'Jetbrains-Mono';
-    src: url(./assets/fonts/JetBrainsMono-2.304/fonts/ttf/JetBrainsMono-Regular.ttf);
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-.grid-container {
-    display: grid;
-    grid-template-rows: 1fr 10px 1fr;
-    grid-template-columns: 1fr 10px 1fr;
-}
-
-.gutter-col {
-    grid-row: 1/-1;
-    cursor: col-resize;
-}
-
-.gutter-col-1 {
-    grid-column: 2;
-}
-
-.gutter-row {
-    grid-column: 1/-1;
-    cursor: row-resize;
-}
-
-.gutter-row-1 {
-    grid-row: 2;
 }
