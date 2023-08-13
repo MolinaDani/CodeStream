@@ -3,6 +3,7 @@
 import { BsCursorText, BsFillGearFill, BsXLg } from "react-icons/bs"
 import { GrTextAlignLeft } from "react-icons/gr"
 import { GoSidebarCollapse } from "react-icons/go"
+import { RiLayoutTopFill, RiLayoutLeftFill, RiLayoutRightFill } from 'react-icons/ri'
 
 //components
 import Range from "./Range"
@@ -13,7 +14,7 @@ import usePreferences from "../hooks/usePreferences"
 
 export default function Modal() {
 
-    const { openPreferences, setOpenPreferences, changeMinimap, theme, setTheme, options, changeOption } = usePreferences()
+    const { openPreferences, setOpenPreferences, changeMinimap, theme, setTheme, options, changeOption, changeBarPreferences } = usePreferences()
 
     return (
         <div className={`absolute top-0 left-0 w-full h-full bg-[#000000ab] backdrop-blur-sm grid place-items-center transition-all duration-200 ${openPreferences ? 'z-50 opacity-100' : 'opacity-0 -z-50'}`} onClick={() => setOpenPreferences(prevState => !prevState)}>
@@ -24,8 +25,20 @@ export default function Modal() {
                     <BsXLg size={'1.2rem'} className="cursor-pointer" onClick={() => setOpenPreferences(prevState => !prevState)}/>
                 </div>
 
+                <h2 className="text-lg flex items-center gap-2"><RiLayoutTopFill size={'0.9rem'} /> Barra de opciones: </h2>
+                <section className="p-3 border rounded-md border-gray-300 flex flex-col gap-2 text-sm">
+                    <h3>Posición:</h3>
+
+                    <select className="px-3 py-1 rounded-md border border-gray-400 outline-none w-fit" onChange={(e) => changeBarPreferences('side', e.target.value)}>
+                        <option value="top">Arriba</option>
+                        <option value="left">Izquierda</option>
+                        <option value="right">Derecha</option>
+                    </select>
+
+                </section>
+
                 <h2 className='text-lg flex items-center gap-2'><GrTextAlignLeft size={'0.9rem'} /> Texto:</h2>
-                <section className='px-3 flex flex-col gap-2 text-sm py-3 border rounded-md border-gray-300'>
+                <section className='p-3 flex flex-col gap-2 text-sm border rounded-md border-gray-300'>
 
                     <Range 
                         label={'Tamaño de fuente:'} 

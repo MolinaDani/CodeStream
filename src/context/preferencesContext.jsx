@@ -3,7 +3,10 @@ import { createContext, useState } from "react";
 export const PreferencesContext = createContext()
 
 export function PreferencesProvider({children}) {
-    
+
+    const [barPreferences, setBarPreferences] = useState({
+        side: 'top'
+    })
     const [openPreferences, setOpenPreferences] = useState(false)
     const [theme, setTheme] = useState('vs-dark')
 
@@ -21,12 +24,12 @@ export function PreferencesProvider({children}) {
             scale: 2,
             side: 'rigth'
         },
-        automaticLayout: true
+        automaticLayout: true,
     })
 
-    const changeOption = (option, value) => {
+    const changeOption = (property, value) => {
         const newOptions = structuredClone(options)
-        newOptions[option] = value
+        newOptions[property] = value
         setOptions(newOptions)
     }
 
@@ -34,6 +37,12 @@ export function PreferencesProvider({children}) {
         const newOptions = structuredClone(options)
         newOptions.minimap[property] = value
         setOptions(newOptions)
+    }
+
+    const changeBarPreferences = (property, value) => {
+        const newBarPreferences = structuredClone(barPreferences)
+        newBarPreferences[property] = value
+        setBarPreferences(newBarPreferences)
     }
 
     return (
@@ -44,7 +53,9 @@ export function PreferencesProvider({children}) {
             setTheme,
             options,
             changeOption,
-            changeMinimap
+            changeMinimap,
+            barPreferences,
+            changeBarPreferences
         }}>
             {children}
         </PreferencesContext.Provider>

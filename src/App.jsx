@@ -7,6 +7,8 @@ import usePreferences from './hooks/usePreferences'
 import { BiDownload } from 'react-icons/bi'
 import { BsTools } from "react-icons/bs"
 import { FaCopy } from 'react-icons/fa'
+import { RiLayoutGridFill } from 'react-icons/ri'
+import { TfiLayoutColumn4Alt } from 'react-icons/tfi'
 
 
 //components
@@ -22,6 +24,8 @@ import JsLogo from './assets/logos/js_logo.svg'
 
 //utils
 import { Base64 } from 'js-base64'
+import Split from 'split-grid'
+import Button from './components/Button'
 
 const languages = {
   HTML: 'html',
@@ -35,7 +39,9 @@ export default function App() {
   const [valuesOfEditors, setValuesOfEditors] = useState(null)
   const [editorActive, setEditorActive] = useState('')
 
-  const { setOpenPreferences, theme, options } = usePreferences()
+  const [layout, setLayout] = useState('grid')
+
+  const { setOpenPreferences, theme, options, barPreferences } = usePreferences()
 
   function renderHTML(val) {
 
@@ -95,8 +101,8 @@ export default function App() {
     const textAreas = document.querySelectorAll('textarea')
 
     textAreas[0].addEventListener('focus', () => setEditorActive(languages.HTML))
-    textAreas[1].addEventListener('focus', () => setEditorActive(languages.JS))
-    textAreas[2].addEventListener('focus', () => setEditorActive(languages.CSS))
+    textAreas[1].addEventListener('focus', () => setEditorActive(languages.CSS))
+    textAreas[2].addEventListener('focus', () => setEditorActive(languages.JS))
 
   }
 
@@ -128,73 +134,114 @@ export default function App() {
     setURL()
     
   }, [valuesOfEditors])
+
+  useEffect(() => {
+
+    if (layout === 'grid') {
+      Split({
+        minSize: 150,
+        columnGutters: [{ track: 1, element: document.querySelector('.vertical-gutter'), }],
+        rowGutters: [{ track: 1, element: document.querySelector('.horizontal-gutter'), }]
+      })
+      return
+    }
+
+    if (layout === 'cols') {
+      Split({
+          minSize: 100,
+          columnGutters: [
+            {
+              track: 1,
+              element: document.querySelector('.vertical-gutter-1'),
+            },
+            {
+              track: 3,
+              element: document.querySelector('.vertical-gutter-2'),
+            },
+            {
+              track: 5,
+              element: document.querySelector('.vertical-gutter-3'),
+            },
+          ],
+  
+        })
+        return
+    }
+
+  }, [layout])
   
 
   return (
-    <div className="flex flex-col justify-between h-screen relative font-montserratMedium">
+    <div className={`flex ${barPreferences.side === 'top' ? 'flex-col' : barPreferences.side === 'right' ? 'flex-row-reverse' : 'flex-row'} h-screen relative font-montserratMedium`}>
       <Modal />
 
-      <header className="w-full min-h-[3.2rem] bg-gray-950 px-6 flex items-center justify-between box-border border-b-4 border-b-[#1e1e1e]">
+      <header className={`${barPreferences.side === 'top' ? 'w-full min-h-[3rem] px-6' : 'h-full min-w-[3rem] py-6 flex-col-reverse'} bg-gray-950 flex items-center justify-between`}>
 
-        <div className='flex items-center gap-2'>
-          <img src='/CodeStream_Logo.png' alt="logo" className='w-5 h-5'/>
-          <h1 className="text-white text-lg font-montserratMedium">CodeStream</h1>
+        <div 
+          data-tooltip-id='help' 
+          data-tooltip-content={'©2023 CodeStream by Daniel Molina'} 
+          data-tooltip-place='bottom' 
+          className='flex items-center gap-2 cursor-default'
+        >
+            <img src='/CodeStream_Logo.png' alt="logo" className='w-6 h-6'/>
+            <h1 className={`${barPreferences.side !== 'top' ? 'hidden' : ''} text-white text-lg font-montserratMedium`}>CodeStream</h1>
         </div>
 
-        <div className='flex items-center gap-6 text-gray-200'>
+        <div className={`${barPreferences.side !== 'top' ? 'flex-col-reverse' : ''} flex items-center gap-6 text-gray-200`}>
 
-          <button 
-            data-tooltip-id='help' 
-            data-tooltip-content={'Copiar URL'} 
-            data-tooltip-place='bottom' 
-            className='transition-all hover:text-gray-400' 
-            onClick={handleCopy}
-          >
+          <div className={`${barPreferences.side !== 'top' ? 'flex-col mt-6 px-1 py-3' : 'mr-6 py-1 px-3'} w-auto flex items-center gap-4 border border-gray-600 rounded-md`}>
+
+            <Button idTool={'help'} textTool={'Vista en cuadrícula'} sideTool={'bottom'} active={layout === 'grid'} click={() => setLayout('grid')}>
+              <RiLayoutGridFill size={'1.5rem'}/>
+            </Button>
+
+            <Button idTool={'help'} textTool={'Vista en columnas'} sideTool={'bottom'} active={layout === 'cols'} click={() => setLayout('cols')}>
+              <TfiLayoutColumn4Alt size={'1.3rem'}/>
+            </Button>
+
+          </div>
+
+          <Button idTool={'help'} textTool={'Copiar URL'} sideTool={'bottom'} click={handleCopy}>
             <FaCopy size={'1.4rem'}/>
-          </button>
+          </Button>
 
-          <button 
-            data-tooltip-id='help' 
-            data-tooltip-content={'Descargar HTML'} 
-            data-tooltip-place='bottom' 
-            className='transition-all hover:text-gray-400' 
-            onClick={handleDownload}
-          >
+          <Button idTool={'help'} textTool={'Descargar HTML'} sideTool={'bottom'} click={handleDownload}>
             <BiDownload size={'1.5rem'} />
-          </button>
+          </Button>
 
-          <button 
-            data-tooltip-id='help' 
-            data-tooltip-content={'Preferencias'} 
-            data-tooltip-place='bottom' 
-            className='transition-all hover:text-gray-400' 
-            onClick={() => setOpenPreferences(prevState => !prevState)}
-          >
+          <Button idTool={'help'} textTool={'Preferencias'} sideTool={'bottom'} click={() => setOpenPreferences(prevState => !prevState)}>
             <BsTools size={'1.2rem'} />
-          </button>
-
-          <Tooltip id='help' style={{
-            zIndex: 1000, 
-            fontSize: '0.8rem', 
-            backgroundColor: 'white', 
-            color: 'black', 
-            padding: '5px 12px'}} 
-          />
+          </Button>
 
         </div>
 
       </header>
 
-      <main className="flex-1 w-full bg-[#1e1e1e] grid grid-cols-2 grid-rows-2">
+      <Tooltip id='help' style={{
+          zIndex: 1000, 
+          fontSize: '0.8rem', 
+          backgroundColor: 'white', 
+          color: 'black', 
+          padding: '5px 12px'
+        }} 
+      />
 
-        <section className='w-full h-full relative'>
+      <main className={`h-full w-full bg-[#1e1e1e] grid `} style={
+        layout === 'grid' 
+        ? { gridTemplateColumns: "49.7%  0.6% 49.7%", gridTemplateRows: "49.3% 1.4% 49.3%" }
+        : layout === 'cols'  
+          ? { gridTemplateColumns: "24.55% 0.6% 24.55% 0.6% 24.55% 0.6% 24.55%" } 
+          : null
+        }>
+
+        <section className='w-full h-full relative pt-1'>
           <Editor 
             language={languages.HTML}
             value={valuesOfEditors ? valuesOfEditors.html : ''}
             options={options}
             theme={theme}
             loading={<Spinner />}
-            className='w-full h-full min-h-0'
+            className=''
             onChange={(value) => setValuesOfEditors({...valuesOfEditors, html: value}) }
             onMount={handleMount}
           />
@@ -203,21 +250,7 @@ export default function App() {
 
         </section>
 
-        <section className='w-full h-full relative'>
-          <Editor 
-            language={languages.JS}
-            value={valuesOfEditors ? valuesOfEditors.js : ''}
-            options={options}
-            theme={theme}
-            loading={<Spinner />}
-            className='w-full h-full min-h-0'
-            onChange={(value) => setValuesOfEditors({...valuesOfEditors, js: value}) }
-          />
-
-          <img src={JsLogo} alt="logo_html" className={`w-8 h-8 absolute top-2 right-5 transition-all ${editorActive !== languages.JS ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
-        </section>
-
-        <section className='w-full h-full relative'>
+        <section className='w-full h-full relative pt-1'>
           <Editor 
             language={languages.CSS}
             value={valuesOfEditors ? valuesOfEditors.css : ''}
@@ -231,9 +264,39 @@ export default function App() {
           <img src={CssLogo} alt="logo_html" className={`w-9 h-9 absolute top-2 right-5 transition-all ${editorActive !== languages.CSS ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
         </section>
 
+        <section className='w-full h-full relative pt-1'>
+          <Editor 
+            language={languages.JS}
+            value={valuesOfEditors ? valuesOfEditors.js : ''}
+            options={options}
+            theme={theme}
+            loading={<Spinner />}
+            className='w-full h-full min-h-0'
+            onChange={(value) => setValuesOfEditors({...valuesOfEditors, js: value}) }
+          />
+
+          <img src={JsLogo} alt="logo_html" className={`w-8 h-8 absolute top-2 right-5 transition-all ${editorActive !== languages.JS ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
+        </section>
+
         <section className='bg-white'>
           <iframe id='preview' className='w-full h-full'></iframe>
         </section>
+
+        { layout === 'grid'
+          ? 
+            <>
+              <div className="horizontal-gutter bg-gray-950 cursor-row-resize" />
+              <div className="vertical-gutter bg-gray-950 cursor-col-resize" />
+            </>
+          : layout === 'cols'
+            ?
+              <>
+                <div className='bg-gray-950 vertical-gutter-1 cursor-col-resize' />
+                <div className='bg-gray-950 vertical-gutter-2 cursor-col-resize' />
+                <div className='bg-gray-950 vertical-gutter-3 cursor-col-resize' />
+              </>
+            : null
+        }
 
       </main>
                   
