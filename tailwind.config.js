@@ -11,7 +11,6 @@ export default {
       montserratRegular: ['Montserrat-Regular', 'sans serif'],
       montserratMedium: ['Montserrat-Medium', 'sans serif'],
       montserratBold: ['Montserrat-Bold', 'sans serif'],
-      jetbrainsMono: ['Jetbrains-Mono', 'sans serif']
     }
   },
   plugins: [],

@@ -5,7 +5,7 @@ import usePreferences from './hooks/usePreferences'
 
 //icons
 import { BiDownload } from 'react-icons/bi'
-import { BsTools } from "react-icons/bs"
+import { BsTools, BsWindowStack } from "react-icons/bs"
 import { FaCopy } from 'react-icons/fa'
 import { RiLayoutGridFill } from 'react-icons/ri'
 import { TfiLayoutColumn4Alt } from 'react-icons/tfi'
@@ -26,6 +26,7 @@ import JsLogo from './assets/logos/js_logo.svg'
 import { Base64 } from 'js-base64'
 import Split from 'split-grid'
 import Button from './components/Button'
+import ButtonWindows from './components/ButtonWindows'
 
 const languages = {
   HTML: 'html',
@@ -37,7 +38,7 @@ export default function App() {
 
   const [proyectHTML, setProyectHTML] = useState('')
   const [valuesOfEditors, setValuesOfEditors] = useState(null)
-  const [editorActive, setEditorActive] = useState('')
+  const [editorActive, setEditorActive] = useState(languages.HTML)
 
   const [layout, setLayout] = useState('grid')
 
@@ -114,11 +115,12 @@ export default function App() {
   }
 
   function handleDownload() {
+    const name = prompt('Ingrese el nombre de su documento: ', 'Proyecto-CodeStream')
     const blob = new Blob([proyectHTML], { type: "text/html" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "Proyecto-CodeStream.html"
+    a.download = `${name.length ? name : 'Proyecto-CodeStream'}.html`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -199,6 +201,9 @@ export default function App() {
               <TfiLayoutColumn4Alt size={'1.3rem'}/>
             </Button>
 
+            <Button idTool={'help'} textTool={'Vista en Pestañas'} sideTool={'bottom'} active={layout === 'windows'} click={() => setLayout('windows')}>
+              <BsWindowStack size={'1.3rem'}/>
+            </Button>
           </div>
 
           <Button idTool={'help'} textTool={'Copiar URL'} sideTool={'bottom'} click={handleCopy}>
@@ -226,7 +231,7 @@ export default function App() {
         }} 
       />
 
-      <main className={`h-full w-full bg-[#1e1e1e] grid `} style={
+      <main className={`h-full w-full bg-[#1e1e1e] ${layout === 'windows' ? 'flex flex-col' : 'grid'} `} style={
         layout === 'grid' 
         ? { gridTemplateColumns: "49.7%  0.6% 49.7%", gridTemplateRows: "49.3% 1.4% 49.3%" }
         : layout === 'cols'  
@@ -234,7 +239,34 @@ export default function App() {
           : null
         }>
 
-        <section className='w-full h-full relative pt-1'>
+        <aside className={`${layout !== 'windows' ? 'hidden' : ''} flex bg-gray-950 text-white px-2 font-montserratLigth`}>
+          <ButtonWindows 
+            text={'HTML'} 
+            srcImg={HtmlLogo} 
+            click={() => setEditorActive(languages.HTML)} 
+            active={editorActive === languages.HTML} 
+          />
+          <ButtonWindows 
+            text={'CSS'} 
+            srcImg={CssLogo} 
+            click={() => setEditorActive(languages.CSS)} 
+            active={editorActive === languages.CSS} 
+          />
+          <ButtonWindows 
+            text={'JavaScript'} 
+            srcImg={JsLogo} 
+            click={() => setEditorActive(languages.JS)} 
+            active={editorActive === languages.JS} 
+          />
+          <ButtonWindows 
+            text={'Resultado'} 
+            click={() => setEditorActive('preview')} 
+            active={editorActive === 'preview'} 
+            activeStyle='bg-white text-black font-montserratMedium'
+          />
+        </aside>
+
+        <section className={`w-full relative pt-1 ${layout === 'windows' ? editorActive !== languages.HTML ? 'hidden' : 'flex-1' : 'h-full'}`}>
           <Editor 
             language={languages.HTML}
             value={valuesOfEditors ? valuesOfEditors.html : ''}
@@ -246,11 +278,11 @@ export default function App() {
             onMount={handleMount}
           />
 
-          <img src={HtmlLogo} alt="logo_html" className={`w-9 h-9 absolute top-2 right-5 transition-all ${editorActive !== languages.HTML ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
+          <img src={HtmlLogo} alt="logo_html" className={`absolute right-5 ${layout === 'windows' ? 'w-12 h-12 bottom-2' : `w-9 h-9 top-2 ${editorActive !== languages.HTML ? 'grayscale opacity-60 scale-90' : ''}`} transition-all`} />
 
         </section>
 
-        <section className='w-full h-full relative pt-1'>
+        <section className={`w-full relative pt-1 ${layout === 'windows' ? editorActive !== languages.CSS ? 'hidden' : 'flex-1' : 'h-full'}`}>
           <Editor 
             language={languages.CSS}
             value={valuesOfEditors ? valuesOfEditors.css : ''}
@@ -261,10 +293,10 @@ export default function App() {
             onChange={(value) => setValuesOfEditors({...valuesOfEditors, css: value}) }
           />
 
-          <img src={CssLogo} alt="logo_html" className={`w-9 h-9 absolute top-2 right-5 transition-all ${editorActive !== languages.CSS ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
+          <img src={CssLogo} alt="logo_css" className={`absolute right-5 ${layout === 'windows' ? 'w-12 h-12 bottom-2' : `w-9 h-9 top-2 ${editorActive !== languages.CSS ? 'grayscale opacity-60 scale-90' : ''}`} transition-all`} />
         </section>
 
-        <section className='w-full h-full relative pt-1'>
+        <section className={`w-full relative pt-1 ${layout === 'windows' ? editorActive !== languages.JS ? 'hidden' : 'flex-1' : 'h-full'}`}>
           <Editor 
             language={languages.JS}
             value={valuesOfEditors ? valuesOfEditors.js : ''}
@@ -275,10 +307,10 @@ export default function App() {
             onChange={(value) => setValuesOfEditors({...valuesOfEditors, js: value}) }
           />
 
-          <img src={JsLogo} alt="logo_html" className={`w-8 h-8 absolute top-2 right-5 transition-all ${editorActive !== languages.JS ? 'grayscale opacity-60 scale-90' : ''} transition-all`} />
+          <img src={JsLogo} alt="logo_javascript" className={`absolute right-5 ${layout === 'windows' ? 'w-12 h-12 bottom-2' : `w-9 h-9 top-2 ${editorActive !== languages.JS ? 'grayscale opacity-60 scale-90' : ''}`} transition-all`} />
         </section>
 
-        <section className='bg-white'>
+        <section className={`bg-white ${layout === 'windows' ? editorActive !== 'preview' ? 'hidden' : '' : ''} w-full h-full`}>
           <iframe id='preview' className='w-full h-full'></iframe>
         </section>
 
