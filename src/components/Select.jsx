@@ -5,7 +5,7 @@ export default function Select({label, property, options: selectOptions}) {
     const { options, changeOption } = usePreferences()
 
     return (
-        <div className='flex flex-col gap-2'>
+        <div className='flex flex-col gap-2 items-center text-center'>
             <span>{label}</span>
 
             <select className='px-3 py-1 rounded-md border border-gray-400 outline-none w-fit' defaultValue={options[property]} onChange={(e) => 

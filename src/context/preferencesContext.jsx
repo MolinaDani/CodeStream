@@ -1,14 +1,15 @@
 import { createContext, useState } from "react";
 
+import { LAYOUTS, THEMES } from '../assets/dictionary'
+
 export const PreferencesContext = createContext()
 
 export function PreferencesProvider({children}) {
 
-    const [barPreferences, setBarPreferences] = useState({
-        side: 'top'
-    })
+    const [barPreferences, setBarPreferences] = useState({ side: 'top' })
+    const [layout, setLayout] = useState(LAYOUTS.windows)
+    const [theme, setTheme] = useState(THEMES.vsDark)
     const [openPreferences, setOpenPreferences] = useState(false)
-    const [theme, setTheme] = useState('vs-dark')
 
     const [options, setOptions] = useState({
         fontSize: 14,
@@ -55,7 +56,9 @@ export function PreferencesProvider({children}) {
             changeOption,
             changeMinimap,
             barPreferences,
-            changeBarPreferences
+            changeBarPreferences,
+            layout,
+            setLayout
         }}>
             {children}
         </PreferencesContext.Provider>

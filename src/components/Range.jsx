@@ -11,7 +11,7 @@ export default function Range({label, property, minValue, maxValue, step}) {
 
             <div className='flex items-center gap-3'>
                 <span>{options[property]}</span>
-                <input type="range" min={minValue} max={maxValue} step={step} defaultValue={options[property]} className='appearance-none w-56 h-2 bg-gray-300 rounded-lg outline-none' onChange={(e) => {
+                <input type="range" min={minValue} max={maxValue} step={step} defaultValue={options[property]} className='appearance-none w-36 lg:w-56 h-2 bg-gray-300 rounded-lg outline-none' onChange={(e) => {
                     changeOption(property, e.target.value)
                 }}/>
             </div>

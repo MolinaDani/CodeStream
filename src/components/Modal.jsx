@@ -1,9 +1,10 @@
 
 //icons
-import { BsCursorText, BsFillGearFill, BsXLg } from "react-icons/bs"
+import { BsCursorText, BsFillGearFill, BsWindowStack, BsXLg } from "react-icons/bs"
 import { GrTextAlignLeft } from "react-icons/gr"
 import { GoSidebarCollapse } from "react-icons/go"
-import { RiLayoutTopFill, RiLayoutLeftFill, RiLayoutRightFill } from 'react-icons/ri'
+import { RiLayoutTopFill, RiLayoutGridFill } from 'react-icons/ri'
+import { TfiLayoutColumn4Alt } from "react-icons/tfi"
 
 //components
 import Range from "./Range"
@@ -12,21 +13,55 @@ import Select from "./Select"
 //hooks
 import usePreferences from "../hooks/usePreferences"
 
+//utils
+import { LAYOUTS, THEMES } from "../assets/dictionary"
+
 export default function Modal() {
 
-    const { openPreferences, setOpenPreferences, changeMinimap, theme, setTheme, options, changeOption, changeBarPreferences } = usePreferences()
+    const { 
+        openPreferences, 
+        setOpenPreferences, 
+        changeMinimap, 
+        theme, 
+        setTheme, 
+        options, 
+        changeOption, 
+        changeBarPreferences, 
+        layout, 
+        setLayout 
+    } = usePreferences()
 
     return (
         <div className={`absolute top-0 left-0 w-full h-full bg-[#000000ab] backdrop-blur-sm grid place-items-center transition-all duration-200 ${openPreferences ? 'z-50 opacity-100' : 'opacity-0 -z-50'}`} onClick={() => setOpenPreferences(prevState => !prevState)}>
-            <article className='min-w-[95%] md:min-w-[75%] lg:min-w-[50%] max-h-[85%] px-8 bg-white rounded-xl flex flex-col gap-3 text-gray-800 relative overflow-x-hidden' onClick={(e) => e.stopPropagation()}>
+            <article className='w-[95%] md:w-[75%] lg:w-[50%] max-h-[85%] px-8 bg-white rounded-xl flex flex-col gap-3 text-gray-800 relative overflow-x-hidden' onClick={(e) => e.stopPropagation()}>
 
                 <div className="flex items-center justify-between py-4 bg-white sticky top-0 left-0 border-b border-b-gray-300">
-                    <h1 className='text-xl font-montserratBold'>Preferencias</h1> 
-                    <BsXLg size={'1.2rem'} className="cursor-pointer" onClick={() => setOpenPreferences(prevState => !prevState)}/>
+                    <h1 className='text-lg font-montserratBold'>Preferencias</h1> 
+                    <BsXLg size={'1.1rem'} className="cursor-pointer" onClick={() => setOpenPreferences(prevState => !prevState)}/>
                 </div>
 
-                <h2 className="text-lg flex items-center gap-2"><RiLayoutTopFill size={'0.9rem'} /> Barra de opciones: </h2>
-                <section className="p-3 border rounded-md border-gray-300 flex flex-col gap-2 text-sm">
+                <h2 className="hidden md:flex items-center gap-2"><RiLayoutTopFill size={'0.8rem'} /> Diseño: </h2>
+                <section className="hidden md:flex p-3 border rounded-md border-gray-300 justify-around gap-2 text-sm">
+
+                    <button className={`flex items-center gap-2 ${layout === LAYOUTS.grid ? 'text-blue-600' : ''}`} onClick={() => setLayout(LAYOUTS.grid)}>
+                        <RiLayoutGridFill size={'1.2rem'}/>
+                        Cuadrícula
+                    </button>
+
+                    <button className={`flex items-center gap-2 ${layout === LAYOUTS.columns ? 'text-blue-600' : ''}`} onClick={() => setLayout(LAYOUTS.columns)}>
+                        <TfiLayoutColumn4Alt size={'1rem'}/>
+                        Columnas
+                    </button>
+
+                    <button className={`flex items-center gap-2 ${layout === LAYOUTS.windows ? 'text-blue-600' : ''}`} onClick={() => setLayout(LAYOUTS.windows)}>
+                        <BsWindowStack size={'1rem'}/>
+                        Ventanas
+                    </button>
+
+                </section>
+
+                <h2 className="hidden md:flex items-center gap-2"><RiLayoutTopFill size={'0.8rem'} /> Barra de opciones: </h2>
+                <section className="hidden md:flex p-3 border rounded-md border-gray-300 flex-col gap-2 text-sm">
                     <h3>Posición:</h3>
 
                     <select className="px-3 py-1 rounded-md border border-gray-400 outline-none w-fit" onChange={(e) => changeBarPreferences('side', e.target.value)}>
@@ -37,8 +72,8 @@ export default function Modal() {
 
                 </section>
 
-                <h2 className='text-lg flex items-center gap-2'><GrTextAlignLeft size={'0.9rem'} /> Texto:</h2>
-                <section className='p-3 flex flex-col gap-2 text-sm border rounded-md border-gray-300'>
+                <h2 className='flex items-center gap-2'><GrTextAlignLeft size={'0.8rem'} /> Texto:</h2>
+                <section className='p-3 flex flex-col gap-2 border rounded-md border-gray-300 text-xs lg:text-sm'>
 
                     <Range 
                         label={'Tamaño de fuente:'} 
@@ -66,8 +101,8 @@ export default function Modal() {
 
                 </section>
 
-                <h2 className='text-lg flex items-center gap-2'><BsCursorText size={'1rem'} /> Cursor:</h2>
-                <section className='px-3 grid grid-cols-2 grid-rows-2 gap-4 text-sm py-3 border rounded-md border-gray-300'>
+                <h2 className='flex items-center gap-2'><BsCursorText size={'0.9rem'} /> Cursor:</h2>
+                <section className='px-3 grid grid-cols-2 grid-rows-2 gap-4 py-3 border rounded-md border-gray-300 text-xs lg:text-sm'>
 
                     <Select
                         label={'Parpadeo del cursor:'} 
@@ -117,7 +152,7 @@ export default function Modal() {
                 </section>
                 
                 <div className="flex items-center justify-between">
-                    <h2 className='text-lg flex items-center gap-2'><GoSidebarCollapse size={'1rem'} /> Minimapa:</h2>
+                    <h2 className='flex items-center gap-2'><GoSidebarCollapse size={'0.9rem'} /> Minimapa:</h2>
                     
                     <div className="flex items-center gap-2">
                         <input id="enabledMinimap" type="checkbox" checked={options.minimap.enabled} onChange={(e) => 
@@ -128,7 +163,7 @@ export default function Modal() {
 
                 </div>
 
-                <section className={`px-3 grid grid-cols-2 gap-4 text-sm py-3 border rounded-md border-gray-300 ${!options.minimap.enabled ? 'hidden' : ''}`}>
+                <section className={`px-3 grid grid-cols-2 gap-4 py-3 border rounded-md border-gray-300 text-xs lg:text-sm ${!options.minimap.enabled ? 'hidden' : ''}`}>
 
                     <div className='flex flex-col gap-2'>
                         <span>Posición:</span>
@@ -154,9 +189,9 @@ export default function Modal() {
 
                 </section>
 
-                <h2 className='text-lg flex items-center gap-2'><BsFillGearFill size={'1rem'} /> Otros:</h2>
+                <h2 className='flex items-center gap-2'><BsFillGearFill size={'0.9rem'} /> Otros:</h2>
 
-                <section className='px-3 flex flex-col gap-2 text-sm py-3 border rounded-md border-gray-300 mb-6'>
+                <section className='px-3 flex flex-col gap-2 py-3 border rounded-md border-gray-300 mb-6 text-xs lg:text-sm'>
                     <Range 
                         label={'Tamaño de la tabulación:'} 
                         property={'tabSize'} 
@@ -171,10 +206,10 @@ export default function Modal() {
                         <select className='px-3 py-1 rounded-md border border-gray-400 outline-none w-fit' defaultValue={theme} onChange={(e) =>
                             setTheme(e.target.value)
                         }>
-                            <option value='vs'>Vs</option>
-                            <option value='vs-dark'>Vs-Dark</option>
-                            <option value='hc-black'>Hc-Black</option>
-                            <option value='vs-light'>Vs-Light</option>
+                            <option value={THEMES.vs}>Vs</option>
+                            <option value={THEMES.vsDark}>Vs-Dark</option>
+                            <option value={THEMES.hcBlack}>Hc-Black</option>
+                            <option value={THEMES.vsLight}>Vs-Light</option>
                         </select>
                     </div>  
                     
