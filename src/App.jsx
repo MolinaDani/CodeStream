@@ -13,8 +13,8 @@ import { FaCopy } from 'react-icons/fa'
 import { Editor } from '@monaco-editor/react'
 import { Tooltip } from 'react-tooltip'
 import Modal from './components/Modal'
-import Spinner from './components/Spinner'
 import Button from './components/Button'
+import Spinner from './components/Spinner'
 import ButtonWindows from './components/ButtonWindows'
 
 //logos
