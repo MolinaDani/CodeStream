@@ -74,22 +74,28 @@ export default function App() {
 
   function setURL() {
     const { html, css, javascript } = valuesOfEditors
-    window.history.replaceState(null, null, `/${Base64.encode(html)}|${Base64.encode(css)}|${Base64.encode(javascript)}`)
+    window.history.replaceState(null, null, `?proyect=${Base64.encode(html)}|${Base64.encode(css)}|${Base64.encode(javascript)}`)
   }
 
   function initialize() {
 
-    let params = window.location.pathname.slice(1).split('%7C')
+    const urlParam = new URLSearchParams(window.location.search).get('proyect')
     let initialValues = { html: '', css: '', javascript: '' }
 
-    if (params[0])
-      initialValues.html = Base64.decode(params[0])
-  
-    if (params[1])
-      initialValues.css = Base64.decode(params[1])
-  
-    if (params[2]) 
-      initialValues.javascript = Base64.decode(params[2])  
+    if (urlParam) {
+
+      const params = urlParam.split('|')
+      
+      if (params[0])
+        initialValues.html = Base64.decode(params[0])
+    
+      if (params[1])
+        initialValues.css = Base64.decode(params[1])
+    
+      if (params[2]) 
+        initialValues.javascript = Base64.decode(params[2])  
+
+    }
     
     setValuesOfEditors(initialValues)
     renderHTML(initialValues)
